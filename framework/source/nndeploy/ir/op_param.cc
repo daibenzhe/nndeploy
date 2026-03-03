@@ -152,6 +152,7 @@ static const std::map<OpType, std::string> g_optype_string_map = {
     {kOpTypeXor, "kOpTypeXor"},
     {kOpTypeRMSNorm, "kOpTypeRMSNorm"},
     {kOpTypeEmbedding, "kOpTypeEmbedding"},
+    {kOpTypeSiLU, "kOpTypeSiLU"},
 
     {kOpTypeNone, "kOpTypeNone"},
 };
@@ -303,6 +304,7 @@ static const std::map<std::string, OpType> g_string_optype_map = {
     {"kOpTypeXor", kOpTypeXor},
     {"kOpTypeRMSNorm", kOpTypeRMSNorm},
     {"kOpTypeEmbedding", kOpTypeEmbedding},
+    {"kOpTypeSiLU", kOpTypeSiLU},
 
     {"kOpTypeNone", kOpTypeNone},
 };
