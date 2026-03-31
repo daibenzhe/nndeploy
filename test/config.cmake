@@ -50,9 +50,22 @@ list(APPEND THIRD_PARTY_LIBRARY ${NNDEPLOY_PLUGIN_LIST})
 set(TEST_BUILD_DIR ${CMAKE_BINARY_DIR}/test)
 #DAG tests
 set(DAG_TEST_PATH ${ROOT_PATH}/test/dag)
+#OP tests
+set(OP_TEST_PATH ${ROOT_PATH}/test/source/nndeploy/op)
 
 add_test(edge_test "")
 add_test(graph_test "")
+
+# SiLU test
+add_executable(silu_test ${OP_TEST_PATH}/silu_test.cc)
+target_link_libraries(silu_test GTest::gtest_main ${DEPEND_LIBRARY} ${SYSTEM_LIBRARY} ${THIRD_PARTY_LIBRARY})
+target_compile_definitions(silu_test PRIVATE TEST_DATA_DIR="${OP_TEST_PATH}")
+if (APPLE)
+  set_target_properties(silu_test PROPERTIES LINK_FLAGS "-Wl,-undefined,dynamic_lookup")
+elseif (UNIX)
+  set_target_properties(silu_test PROPERTIES LINK_FLAGS "-Wl,--no-as-needed")
+endif()
+install(TARGETS silu_test RUNTIME DESTINATION ${NNDEPLOY_INSTALL_TEST_PATH})
 
 include(GoogleTest)
 
