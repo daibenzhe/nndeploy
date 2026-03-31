@@ -1,3 +1,4 @@
+
 #include "nndeploy/device/cpu/cpu_device.h"
 
 #include "nndeploy/device/buffer.h"
@@ -91,7 +92,7 @@ BufferDesc CpuDevice::toBufferDesc(const TensorDesc &desc,
 void *CpuDevice::allocate(size_t size) {
   void *data = malloc(size);
   if (data == nullptr) {
-    NNDEPLOY_LOGE("allocate buffer failed");
+    NNDEPLOY_LOGE("allocate buffer failed.\n");
     return nullptr;
   }
   return data;
@@ -99,7 +100,7 @@ void *CpuDevice::allocate(size_t size) {
 void *CpuDevice::allocate(const BufferDesc &desc) {
   void *data = malloc(desc.getRealSize());
   if (data == nullptr) {
-    NNDEPLOY_LOGE("allocate buffer failed");
+    NNDEPLOY_LOGE("allocate buffer failed.\n");
     return nullptr;
   }
   return data;

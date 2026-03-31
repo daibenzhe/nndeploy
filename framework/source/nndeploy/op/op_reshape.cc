@@ -1,4 +1,5 @@
 
+
 #include "nndeploy/op/op_reshape.h"
 
 #include "nndeploy/base/any.h"
@@ -27,9 +28,15 @@ base::Status OpReshape::inferShape() {
   auto param = dynamic_cast<ir::ReshapeParam *>(op_desc_.op_param_.get());
   NNDEPLOY_CHECK_PARAM_NULL_RET_STATUS(param, "op_desc_.op_param_ is nullptr");
   int allowzero = param->allowzero_;
-
+  inputs_[1]->print();
   int target_shape_size = inputs_[1]->getShapeIndex(0);
   int64_t *target_shape_data = (int64_t *)inputs_[1]->getData();
+  if (target_shape_data == nullptr) {
+    NNDEPLOY_LOGE("target_shape_data is nullptr\n");
+    return base::kStatusCodeErrorInvalidValue;
+  }
+  inputs_[0]->print();
+  inputs_[1]->print();
   base::IntVector output_shape;
   for (int i = 0; i < target_shape_size; i++) {
     output_shape.push_back((int)target_shape_data[i]);
@@ -88,6 +95,9 @@ base::Status OpReshape::inferShape() {
       }
       output_shape[negativeOneDim] = (inputProduct / outputProduct);
     }
+  }
+  for (int i = 0; i < output_shape.size(); ++i) {
+    NNDEPLOY_LOGE("output_shape[%d] = %d\n", i, output_shape[i]);
   }
   outputs_[0]->reshape(output_shape);
 

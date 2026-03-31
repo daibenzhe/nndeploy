@@ -1,4 +1,5 @@
 
+
 #include "nndeploy/ir/op_param.h"
 
 namespace nndeploy {
@@ -25,6 +26,7 @@ static const std::map<OpType, std::string> g_optype_string_map = {
     {kOpTypeConv, "kOpTypeConv"},
     {kOpTypeCos, "kOpTypeCos"},
     {kOpTypeCosh, "kOpTypeCosh"},
+    {kOpTypeConstantOfShape, "kOpTypeConstantOfShape"},
     {kOpTypeDepthToSpace, "kOpTypeDepthToSpace"},
     {kOpTypeDequantizeLinear, "kOpTypeDequantizeLinear"},
     {kOpTypeDet, "kOpTypeDet"},
@@ -35,6 +37,7 @@ static const std::map<OpType, std::string> g_optype_string_map = {
     {kOpTypeEqual, "kOpTypeEqual"},
     {kOpTypeErf, "kOpTypeErf"},
     {kOpTypeExp, "kOpTypeExp"},
+    {kOpTypeExpand, "kOpTypeExpand"},
     {kOpTypeFlatten, "kOpTypeFlatten"},
     {kOpTypeFloor, "kOpTypeFloor"},
     {kOpTypeGather, "kOpTypeGather"},
@@ -174,6 +177,7 @@ static const std::map<std::string, OpType> g_string_optype_map = {
     {"kOpTypeConv", kOpTypeConv},
     {"kOpTypeCos", kOpTypeCos},
     {"kOpTypeCosh", kOpTypeCosh},
+    {"kOpTypeConstantOfShape", kOpTypeConstantOfShape},
     {"kOpTypeDepthToSpace", kOpTypeDepthToSpace},
     {"kOpTypeDequantizeLinear", kOpTypeDequantizeLinear},
     {"kOpTypeDet", kOpTypeDet},
@@ -184,6 +188,7 @@ static const std::map<std::string, OpType> g_string_optype_map = {
     {"kOpTypeEqual", kOpTypeEqual},
     {"kOpTypeErf", kOpTypeErf},
     {"kOpTypeExp", kOpTypeExp},
+    {"kOpTypeExpand", kOpTypeExpand},
     {"kOpTypeFlatten", kOpTypeFlatten},
     {"kOpTypeFloor", kOpTypeFloor},
     {"kOpTypeGather", kOpTypeGather},
@@ -403,7 +408,6 @@ REGISTER_OP_PARAM_IMPLEMENTION(kOpTypeReduceSum, ReduceSumParam);
 REGISTER_OP_PARAM_IMPLEMENTION(kOpTypeShape, ShapeParam);
 
 REGISTER_OP_PARAM_IMPLEMENTION(kOpTypeCast, CastParam);
-
 
 }  // namespace ir
 }  // namespace nndeploy

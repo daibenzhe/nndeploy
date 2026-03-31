@@ -18,8 +18,8 @@
 #include "rapidjson/writer.h"
 
 #ifdef _MSC_VER
-  #pragma warning(push)            // 保存当前警告状态
-  #pragma warning(disable : 4267)  // 禁用 C4267 警告
+#pragma warning(push)            // 保存当前警告状态
+#pragma warning(disable : 4267)  // 禁用 C4267 警告
 #endif
 
 namespace nndeploy {
@@ -80,7 +80,7 @@ enum OpType : int {
   kOpTypeCeil,
   kOpTypeClip,
   kOpTypeConcat,
-  kOpTypeConstant,
+  kOpTypeConstant, // 该算子转换为权重
   kOpTypeConv,
   kOpTypeCos,
   kOpTypeCosh,
