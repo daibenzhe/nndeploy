@@ -3937,3 +3937,89 @@ TEST(InteropWorkflowTest, RunnerSaturationExtractExplain) {
   EXPECT_GE(expl.treeSize(), 2U);
   EXPECT_FALSE(expl.flatExplanation().empty());
 }
+
+// ===================================================================
+// CookbookWorkflowTest: Smoke-backed examples for the README cookbook.
+// These tests precisely mirror the code snippets in the README.
+// ===================================================================
+
+// 1. Structural expression construction (RecExprBuilder)
+TEST(CookbookWorkflowTest, StructuralExpressionConstruction) {
+  RecExprBuilder<Symbol> builder;
+  Id a = builder.addLeaf(Symbol{"a"});
+  Id zero = builder.addLeaf(Symbol{"0"});
+  builder.addNode(Symbol{"+"}, {a, zero});
+  RecExpr<Symbol> expr = std::move(builder).build();
+
+  EXPECT_EQ(expr.size(), 3U);
+  EXPECT_EQ(expr.root().op.value, "+");
+}
+
+// 2. Structural pattern authoring (PatternBuilder)
+TEST(CookbookWorkflowTest, StructuralPatternAuthoring) {
+  PatternBuilder<Symbol> builder;
+  auto x = builder.appendVar("?x");
+  auto zero = builder.appendNode(Symbol{"0"});
+  builder.appendNode(Symbol{"+"}, {x, zero});
+  Pattern<Symbol> pat = std::move(builder).buildPattern();
+
+  EXPECT_EQ(pat.vars().size(), 1U);
+  EXPECT_EQ(pat.vars()[0], Var::fromString("?x"));
+}
+
+// 3. Rewrite application + rebuild
+TEST(CookbookWorkflowTest, RewriteApplicationAndRebuild) {
+  EGraph<Symbol> graph;
+  Id a = graph.add(makeNode("a"));
+  Id zero = graph.add(makeNode("0"));
+  Id plus = graph.add(makeNode("+", {a, zero}));
+
+  Rewrite<Symbol> rule = makePlusZeroRule();
+  rule.run(graph);
+  graph.rebuild();
+
+  EXPECT_EQ(graph.find(plus), graph.find(a));
+}
+
+// 4. Extraction (finding the best / cheapest term)
+TEST(CookbookWorkflowTest, ExtractionBestTerm) {
+  EGraph<Symbol> graph;
+  Id a = graph.add(makeNode("a"));
+  Id zero = graph.add(makeNode("0"));
+  Id plus = graph.add(makeNode("+", {a, zero}));
+  graph.merge(a, plus);
+  graph.rebuild();
+
+  Extractor<Symbol> extractor(graph);
+  auto [cost, best] = extractor.findBest(plus);
+
+  EXPECT_EQ(best.root().op.value, "a");
+  EXPECT_EQ(cost, 1U);
+}
+
+// 5. Explanation (explaining why two terms are equivalent)
+TEST(CookbookWorkflowTest, ExplanationEquivalence) {
+  EGraph<Symbol> graph;
+  graph.withExplanationsEnabled();
+  Id a = graph.add(makeNode("a"));
+  Id b = graph.add(makeNode("b"));
+  graph.unionTrusted(a, b, "manual-merge");
+  graph.rebuild();
+
+  auto expl = explainIdEquivalence(graph, a, b);
+  EXPECT_GE(expl.treeSize(), 2U);
+  EXPECT_FALSE(expl.flatExplanation().empty());
+}
+
+// 6. Runner-based saturation
+TEST(CookbookWorkflowTest, RunnerSaturation) {
+  Runner<Symbol> runner;
+  RecExpr<Symbol> expr = makeBinaryExpr("a", "0", "+");
+  Id root = runner.addExpr(expr);
+
+  runner.run({makePlusZeroRule()});
+
+  EXPECT_EQ(runner.stop_reason.kind, StopReasonKind::Saturated);
+  Extractor<Symbol> extractor(runner.egraph);
+  EXPECT_EQ(extractor.findBest(root).second.root().op.value, "a");
+}
