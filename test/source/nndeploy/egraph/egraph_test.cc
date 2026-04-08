@@ -4023,3 +4023,70 @@ TEST(CookbookWorkflowTest, RunnerSaturation) {
   Extractor<Symbol> extractor(runner.egraph);
   EXPECT_EQ(extractor.findBest(root).second.root().op.value, "a");
 }
+
+// ===================================================================
+// SmokeTest: Canonical end-to-end adoption scenario for Q2 2026.
+//
+// This test is the single authoritative smoke check for the quarter
+// adoption path. It exercises every layer of the public API in sequence:
+//
+//   RecExprBuilder → EGraph::addExpr → Runner saturation →
+//   Extractor::findBest → explainIdEquivalence
+//
+// Run it directly with:
+//   ./build/egraph_test --gtest_filter=SmokeTest.EndToEndAdoptionFlow
+// ===================================================================
+
+// End-to-end quarter adoption smoke check.
+//
+// Expression: (+ a 0)
+// Rule:       (+ ?x 0) => ?x   ("plus-zero")
+//
+// After saturation the e-class that originally held (+ a 0) also
+// contains just `a`.  The extractor must return `a` (cost 1), and the
+// explainer must produce a non-empty proof.
+TEST(SmokeTest, EndToEndAdoptionFlow) {
+  // ── 1. Build the input expression with RecExprBuilder ────────────────
+  // Use RecExprBuilder so expression construction is index-bookkeeping-free.
+  RecExprBuilder<Symbol> builder;
+  Id ba = builder.addLeaf(Symbol{"a"});
+  Id b0 = builder.addLeaf(Symbol{"0"});
+  builder.addNode(Symbol{"+"}, {ba, b0});
+  RecExpr<Symbol> expr = std::move(builder).build();
+
+  ASSERT_EQ(expr.size(), 3U);
+  ASSERT_EQ(expr.root().op.value, "+");
+
+  // ── 2. Insert into Runner and enable explanations ─────────────────────
+  Runner<Symbol> runner;
+  runner.egraph.withExplanationsEnabled();  // must be called before addExpr
+  Id root = runner.addExpr(expr);
+
+  // ── 3. Saturate with the plus-zero rule ───────────────────────────────
+  runner.run({makePlusZeroRule()});
+
+  ASSERT_TRUE(runner.has_stop_reason);
+  EXPECT_EQ(runner.stop_reason.kind, StopReasonKind::Saturated);
+
+  // ── 4. Extract the best (cheapest) term ───────────────────────────────
+  Extractor<Symbol> extractor(runner.egraph);
+  auto [cost, best] = extractor.findBest(root);
+
+  // The rewrite (+ a 0) → a must have been applied; best term is `a`.
+  EXPECT_EQ(cost, 1U);
+  ASSERT_EQ(best.root().op.value, "a");
+
+  // ── 5. Explain the equivalence (+ a 0) ≡ a ────────────────────────────
+  // Look up the canonical Id for `a` so we can explain root ≡ a.
+  RecExpr<Symbol> just_a;
+  just_a.add(makeNode("a"));
+  Id a_id = runner.egraph.lookupRecExpr(just_a);
+
+  ASSERT_EQ(runner.egraph.find(root), runner.egraph.find(a_id));
+
+  auto expl = explainIdEquivalence(runner.egraph, root, a_id);
+
+  // The proof must be non-trivial: at least the rewrite step itself.
+  EXPECT_GE(expl.treeSize(), 2U);
+  EXPECT_FALSE(expl.flatExplanation().empty());
+}

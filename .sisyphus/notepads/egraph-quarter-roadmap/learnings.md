@@ -184,3 +184,20 @@
 - Parser-first criteria are grounded in quarter ergonomics evidence: `RecExprBuilder` and `PatternBuilder` reduced bookkeeping, but cookbook and API-smoke-backed workflows still require explicit topological C++ node construction.
 - Incremental-rebuild-first criteria are grounded in current architecture: `EGraph::rebuild()` remains global, `dirty_roots_` is only a trigger, and `Runner::run()` still performs rebuild before and during every saturation run.
 - Tie-breaker recommendation stays usability-first unless future smoke/resilience data shows rebuild cost, `NodeLimit`, `TimeLimit`, or `rebuild_time` dominating real workloads.
+
+## [2026-04-08] Task 11 - End-to-end adoption smoke scenario
+
+### What was done
+- Added `SmokeTest.EndToEndAdoptionFlow` to `test/source/nndeploy/egraph/egraph_test.cc` (appended after `CookbookWorkflowTest`).
+- Test exercises: RecExprBuilder → runner.egraph.withExplanationsEnabled() → runner.addExpr(expr) → runner.run(rules) → Extractor::findBest → explainIdEquivalence.
+- Updated `framework/include/nndeploy/egraph/README.md`: added one sentence pointing to `SmokeTest.EndToEndAdoptionFlow` under "Supported This Quarter".
+
+### Key patterns confirmed
+- `runner.egraph.withExplanationsEnabled()` must be called BEFORE `runner.addExpr()`, not after.
+- `runner.egraph.lookupRecExpr(just_a)` is needed to get the Id for `a` after saturation so explainIdEquivalence can compare root ≡ a.
+- `explainIdEquivalence` returns treeSize() >= 2 after a rewrite step (one node for original, one for rewritten form).
+- The new suite adds 1 test: total goes from 170 → 171 tests, 15 → 16 suites.
+
+### Evidence files
+- `.sisyphus/evidence/task-11-smoke.txt` — filtered run, 1 test, PASSED
+- `.sisyphus/evidence/task-11-full-suite.txt` — full suite, 171 tests, all PASSED

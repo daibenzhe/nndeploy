@@ -15,6 +15,8 @@ The target audience is **C++ API consumers** building rewrite systems or graph o
 - **Adoption Smoke Tests**: End-to-end verification of e-graph integration in `nndeploy` components.
 - **Release Checklist**: Formalized verification steps for public API stability.
 
+The canonical quarter smoke check is `SmokeTest.EndToEndAdoptionFlow` in `test/source/nndeploy/egraph/egraph_test.cc`. Run it with: `./build/egraph_test --gtest_filter=SmokeTest.EndToEndAdoptionFlow`
+
 ### Deferred This Quarter
 - **S-expression Parser**: Broad support for string-based pattern/expression parsing is deferred. Patterns must be constructed via `PatternAst`, `PatternBuilder`, or `RecExpr`.
 - **Incremental Rebuild Redesign**: While `rebuild()` is correct, the transition to a high-performance incremental model is deferred.
