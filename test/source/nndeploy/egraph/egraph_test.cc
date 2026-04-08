@@ -4025,6 +4025,166 @@ TEST(CookbookWorkflowTest, RunnerSaturation) {
 }
 
 // ===================================================================
+// EdgeCaseResilienceTest: targeted regression coverage for edge cases
+// most likely to hurt production usability.
+//
+// Cases covered:
+//   1. AlreadyEqualMergeIsNoOp       — merge(id, id) is a no-op
+//   2. NoMatchPathReturnsZeroMerges  — rewrite with no applicable matches
+//   3. CycleOnlyExtractionBehavior   — self-referential class after merge
+//   4. ExplanationMisuseThrows       — explainIdEquivalence without enable
+//   5. ZeroRewritesSaturatesImmediately — Runner with empty rule list
+// ===================================================================
+
+// 1. Already-equal merge: merging an id with itself must be a no-op.
+//    The graph size and class count must not change.
+TEST(EdgeCaseResilienceTest, AlreadyEqualMergeIsNoOp) {
+  EGraph<Symbol> graph;
+  Id a = graph.add(makeNode("a"));
+  Id b = graph.add(makeNode("b"));
+
+  std::size_t classes_before = graph.classCount();
+  std::size_t memo_before = graph.memoSize();
+
+  // Merge with itself — must be a no-op and return the canonical id.
+  Id result = graph.merge(a, a);
+  graph.rebuild();
+
+  EXPECT_EQ(graph.find(result), graph.find(a));
+  EXPECT_EQ(graph.classCount(), classes_before);
+  EXPECT_EQ(graph.memoSize(), memo_before);
+
+  // Also verify merge of canonical-equal ids (a was merged with itself above).
+  Id result2 = graph.merge(a, b);
+  // This is a real merge; sanity-check that after a true merge the already-
+  // equal path is stable on subsequent calls.
+  graph.rebuild();
+  Id result3 = graph.merge(a, b);
+  graph.rebuild();
+  EXPECT_EQ(graph.find(result2), graph.find(result3));
+}
+
+// 2. No-match path: a rewrite rule whose LHS pattern does not appear in the
+//    e-graph must produce exactly 0 merges and leave the graph unchanged.
+TEST(EdgeCaseResilienceTest, NoMatchPathReturnsZeroMerges) {
+  EGraph<Symbol> graph;
+  // Graph only has leaf nodes — no binary operators.
+  Id a = graph.add(makeNode("a"));
+  Id b = graph.add(makeNode("b"));
+
+  std::size_t classes_before = graph.classCount();
+  std::size_t memo_before = graph.memoSize();
+
+  // plus-zero rule: LHS is (+ ?x 0) — requires a "+" operator, absent here.
+  Rewrite<Symbol> rule = makePlusZeroRule();
+  std::size_t merges = rule.run(graph);
+
+  EXPECT_EQ(merges, 0U);
+  EXPECT_EQ(graph.classCount(), classes_before);
+  EXPECT_EQ(graph.memoSize(), memo_before);
+
+  // Graph contents must be unchanged.
+  EXPECT_EQ(graph.find(a), graph.find(a));
+  EXPECT_EQ(graph.find(b), graph.find(b));
+  EXPECT_NE(graph.find(a), graph.find(b));
+}
+
+// 3. Cycle-resilient extraction: after merging a node with its parent class
+//    the e-class becomes self-referential, but the class still contains the
+//    original leaf.  The Extractor must still produce a finite result (it
+//    picks the leaf, not the cyclic node).
+//
+//    Note: a "pure cycle-only" class (no leaves at all) cannot be created
+//    through normal EGraph API calls, because add() always requires children
+//    to already exist.  The documented std::runtime_error path in
+//    assertHasCost() is a defensive guard against corrupted or externally
+//    mutated graphs.  This test verifies the realistic scenario: the
+//    extractor correctly ignores the self-referential node and picks the
+//    cheapest acyclic term in the class.
+TEST(EdgeCaseResilienceTest, CycleResilientExtractionPicksLeaf) {
+  EGraph<Symbol> graph;
+
+  // Build: a, f(a), then merge a's class with f(a)'s class.
+  // After rebuild, the class contains both `a` (leaf) and `f(self)`.
+  Id a = graph.add(makeNode("a"));
+  Id fa = graph.add(makeNode("f", {a}));
+
+  EXPECT_NE(graph.find(a), graph.find(fa));
+
+  graph.merge(a, fa);
+  graph.rebuild();
+
+  // Both ids now belong to the same class.
+  EXPECT_EQ(graph.find(a), graph.find(fa));
+
+  // Extraction must succeed and return the leaf `a` (cost 1), not f(self).
+  Extractor<Symbol> extractor(graph);
+  auto [cost, best] = extractor.findBest(a);
+  EXPECT_EQ(cost, 1U);
+  EXPECT_EQ(best.root().op.value, "a");
+
+  // findBestNode must also point to the leaf.
+  const auto &best_node = extractor.findBestNode(a);
+  EXPECT_TRUE(best_node.children.empty());
+  EXPECT_EQ(best_node.op.value, "a");
+}
+
+// 4. Explanation misuse: calling explainIdEquivalence on an EGraph that
+//    was NOT initialized with withExplanationsEnabled() must throw
+//    std::logic_error.  Same for explainEquivalence.
+TEST(EdgeCaseResilienceTest, ExplanationMisuseThrowsLogicError) {
+  EGraph<Symbol> graph;
+  Id a = graph.add(makeNode("a"));
+  Id b = graph.add(makeNode("b"));
+  graph.merge(a, b);
+  graph.rebuild();
+
+  // Explanations are NOT enabled — both free functions must throw.
+  EXPECT_THROW(explainIdEquivalence(graph, a, b), std::logic_error);
+
+  // explainEquivalence also checks before looking up the RecExprs.
+  RecExpr<Symbol> expr_a;
+  expr_a.add(makeNode("a"));
+  RecExpr<Symbol> expr_b;
+  expr_b.add(makeNode("b"));
+  EXPECT_THROW(explainEquivalence(graph, expr_a, expr_b), std::logic_error);
+
+  // egraph.explain() low-level accessor also throws.
+  EXPECT_THROW(graph.explain(), std::logic_error);
+
+  // Verify the accessor reports the correct state.
+  EXPECT_FALSE(graph.explanationsEnabled());
+}
+
+// 5. Saturation with 0 rewrites: a Runner given an empty rule list must
+//    reach Saturated on the very first iteration (no rules, no merges,
+//    scheduler allows stop, size unchanged).
+TEST(EdgeCaseResilienceTest, ZeroRewritesSaturatesImmediately) {
+  Runner<Symbol> runner;
+  RecExpr<Symbol> expr;
+  Id ea = expr.add(makeNode("a"));
+  Id e0 = expr.add(makeNode("0"));
+  expr.add(makeNode("+", {ea, e0}));
+  runner.addExpr(expr);
+
+  // Run with an empty rule vector.
+  runner.run(std::vector<Rewrite<Symbol>>{});
+
+  ASSERT_TRUE(runner.has_stop_reason);
+  EXPECT_EQ(runner.stop_reason.kind, StopReasonKind::Saturated);
+
+  // Must have executed exactly 1 iteration (the saturation check fires
+  // immediately since no rules could have fired).
+  EXPECT_EQ(runner.iterations.size(), 1U);
+  EXPECT_TRUE(runner.iterations[0].applied.empty());
+  EXPECT_TRUE(runner.iterations[0].has_stop_reason);
+  EXPECT_EQ(runner.iterations[0].stop_reason.kind, StopReasonKind::Saturated);
+
+  // E-graph must be unchanged from what was added.
+  EXPECT_EQ(runner.egraph.classCount(), 3U);  // a, 0, (+ a 0)
+}
+
+// ===================================================================
 // SmokeTest: Canonical end-to-end adoption scenario for Q2 2026.
 //
 // This test is the single authoritative smoke check for the quarter

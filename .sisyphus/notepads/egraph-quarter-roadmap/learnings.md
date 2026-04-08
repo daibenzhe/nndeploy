@@ -185,6 +185,29 @@
 - Incremental-rebuild-first criteria are grounded in current architecture: `EGraph::rebuild()` remains global, `dirty_roots_` is only a trigger, and `Runner::run()` still performs rebuild before and during every saturation run.
 - Tie-breaker recommendation stays usability-first unless future smoke/resilience data shows rebuild cost, `NodeLimit`, `TimeLimit`, or `rebuild_time` dominating real workloads.
 
+## [2026-04-08] Task 12: Edge-case resilience pack
+
+### What was added
+- Added `EdgeCaseResilienceTest` suite (5 tests) to `test/source/nndeploy/egraph/egraph_test.cc`:
+  - `AlreadyEqualMergeIsNoOp` — `merge(id, id)` is a no-op; class count and memo size unchanged.
+  - `NoMatchPathReturnsZeroMerges` — rewrite with no applicable LHS matches returns 0 merges; graph unchanged.
+  - `CycleResilientExtractionPicksLeaf` — after `merge(a, f(a))` + rebuild, class contains both `a` (leaf) and `f(self)`; Extractor picks `a` (cost 1) ignoring the cyclic node.
+  - `ExplanationMisuseThrowsLogicError` — `explainIdEquivalence`, `explainEquivalence`, and `egraph.explain()` all throw `std::logic_error` when called without `withExplanationsEnabled()`.
+  - `ZeroRewritesSaturatesImmediately` — `Runner` with empty rules vector reaches `Saturated` in exactly 1 iteration with empty `applied` map.
+
+### Key findings
+- **No bugs exposed**: all 5 edge cases were already handled correctly by the existing implementation. The tests confirm behavior, not fix regressions.
+- **Cycle-only class insight**: a truly cycle-only e-class (containing no leaf nodes) cannot be created through normal `EGraph` API calls, because `add()` requires all child Ids to already exist. The `assertHasCost()` `std::runtime_error` in `extract.h` is therefore a defensive guard against externally corrupted or directly mutated graph state. The `CycleResilientExtractionPicksLeaf` test documents the realistic scenario where merge+rebuild creates a self-referential node but the leaf coexists in the class.
+- **Already-equal merge**: both `mergeInternal` and `mergeWithJustification` short-circuit when `lhs == rhs` (canonical equality), verified by checking class count and memo size are unchanged.
+- **Saturation with zero rules**: the saturation check fires immediately in the first iteration because `applied.empty()`, `canStop()` returns true, hooks are unchanged, and graph size is unchanged. Exactly 1 iteration is recorded.
+
+### Test suite count
+- 171 → 176 tests, 16 → 17 suites, all passing.
+
+### Evidence files
+- `.sisyphus/evidence/task-12-edge-cases.txt` — 71 tests (filtered), all PASSED
+- `.sisyphus/evidence/task-12-full-suite.txt` — 176 tests (full suite), all PASSED
+
 ## [2026-04-08] Task 11 - End-to-end adoption smoke scenario
 
 ### What was done
