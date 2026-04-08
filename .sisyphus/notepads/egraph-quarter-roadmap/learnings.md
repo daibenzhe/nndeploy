@@ -224,3 +224,34 @@
 ### Evidence files
 - `.sisyphus/evidence/task-11-smoke.txt` — filtered run, 1 test, PASSED
 - `.sisyphus/evidence/task-11-full-suite.txt` — full suite, 171 tests, all PASSED
+
+## [2026-04-08] Task 13: Quarter-close release checklist + support docs
+
+### What was added
+- Added `## Quarter-Close Release Checklist` section to `framework/include/nndeploy/egraph/README.md`.
+- Section includes:
+  - **Adoption Checklist**: 5 concrete, runnable test targets (`SmokeTest.EndToEndAdoptionFlow`, `EdgeCaseResilienceTest.*`, `CookbookWorkflowTest.*`, `ApiStabilitySmokeTest.*`, `RunnerTest.*`).
+  - **Support Expectations**: Commitment to stable API maintenance, defect response, and authoring guidance.
+  - **Evidence Required**: Criteria for broader internal adoption (full suite pass, regression immunity, performance baseline).
+  - **Explicit Deferred Items**: Re-iterated deferral of parser and incremental rebuild with reference to the decision package.
+
+### Verification
+- `make egraph_test -j4`
+- `./build/egraph_test` -> 176 tests, 17 suites, all PASSED.
+- Documentation structure verified against requirements.
+
+### Evidence
+- `.sisyphus/evidence/task-13-checklist.txt`
+- `.sisyphus/evidence/task-13-build.txt`
+
+- 2026-04-08 F1 audit approved: README/tests/headers satisfy roadmap must-haves; deferred parser and incremental rebuild remain deferred. Report saved to .sisyphus/evidence/final-f1-plan-compliance.txt.
+
+## [2026-04-08] Final F4: Scope fidelity review
+
+### Review findings
+- Wave 3/4 commit range from `f294de26^..HEAD` contains only six planned commits: interop regression coverage, cookbook docs, next-quarter decision criteria, adoption smoke scenario, edge-case resilience coverage, and quarter-close checklist.
+- Scoped diff since `f294de26^` touches only `framework/include/nndeploy/egraph/README.md`, `framework/include/nndeploy/egraph/rewrite.h`, `framework/include/nndeploy/egraph/searcher.h`, and `test/source/nndeploy/egraph/egraph_test.cc`.
+- Deferred headers stayed untouched in the reviewed range: `recexpr.h` had no parser changes, and `egraph.h` had no incremental rebuild changes.
+- Grep checks found no parser implementation markers (`parseExpr`, `sexpression`, `s_expression`, `tokenize`) in egraph headers.
+- Incremental rebuild search found only pre-existing `dirty_roots_` references in `egraph.h`; no `partial_rebuild` or new incremental path was added.
+- README cookbook/adoption material is C++-first, and `egraph_test.cc` remains direct C++ gtest coverage with no Python wrapper usage.

@@ -1,0 +1,47 @@
+Final Verification F4: Scope Fidelity Check
+
+Verdict: APPROVE
+
+Roadmap scope review
+- Primary persona in plan: C++ API consumers inside nndeploy (`.sisyphus/plans/egraph-quarter-roadmap.md:38-40`).
+- Explicit deferrals in plan: parser expansion, incremental rebuild redesign, and performance/parity work (`.sisyphus/plans/egraph-quarter-roadmap.md:34, 40, 69-73`).
+- Must-have deliverables center on production usability, regression hardening, cookbook workflows, and release-readiness (`.sisyphus/plans/egraph-quarter-roadmap.md:50-67`).
+- All 14 roadmap tasks are marked complete; grep found 14 checked task items in the TODO section.
+
+Git review performed
+- `GIT_MASTER=1 git log --oneline f294de26^..HEAD`
+  - f294de26 test(egraph): add interop regression coverage
+  - 5648b5b1 docs(egraph): add smoke-tested cookbook workflows
+  - c5c9fcbd docs(egraph): add next quarter decision criteria
+  - becc978b test(egraph): add adoption smoke scenario
+  - 8f109078 test(egraph): add edge-case resilience coverage
+  - 9f6e0f1b docs(egraph): add quarter close checklist
+- `GIT_MASTER=1 git diff --name-only f294de26^ HEAD -- framework/include/nndeploy/egraph/ test/source/nndeploy/egraph/`
+  - framework/include/nndeploy/egraph/README.md
+  - framework/include/nndeploy/egraph/rewrite.h
+  - framework/include/nndeploy/egraph/searcher.h
+  - test/source/nndeploy/egraph/egraph_test.cc
+- `GIT_MASTER=1 git diff --name-only f294de26^ HEAD -- framework/include/nndeploy/egraph/recexpr.h framework/include/nndeploy/egraph/egraph.h`
+  - no output (deferred headers unchanged in this commit range)
+
+Deferred-work check
+- Parser search (`parseExpr|sexpression|s_expression|tokenize`) in `framework/include/nndeploy/egraph/*.h`: no matches.
+- Incremental rebuild search (`dirty|partial_rebuild|incremental`) in `framework/include/nndeploy/egraph/*.h`: matches only existing `dirty_roots_` references in `egraph.h`; no new incremental rebuild path was added.
+- `recexpr.h` was not modified in the reviewed range, so no parser implementation was introduced.
+- `egraph.h` was not modified in the reviewed range, so no incremental rebuild additions were introduced.
+
+Scope-creep assessment
+- Reviewed Wave 3/4 scoped diff and found usability-focused additions only: cookbook/release/deferred-scope documentation in `README.md`, direct C++ rewrite/searcher abstraction support in `rewrite.h` and `searcher.h`, and smoke/resilience/API workflow coverage in `egraph_test.cc`.
+- No parser implementation, no partial rebuild logic, and no new benchmarking/profiling infrastructure were added.
+- The `rewrite.h`/`searcher.h` additions remain aligned with quarter usability hardening because they support the documented C++ adoption surface and the interop/adoption smoke tests rather than expanding into deferred parser/performance programs.
+
+Primary persona check
+- README cookbook examples are C++-first snippets (`framework/include/nndeploy/egraph/README.md:125-209`) using `RecExprBuilder`, `PatternBuilder`, `EGraph`, `Rewrite`, `Extractor`, and `Runner` directly.
+- README quarter contract explicitly names C++ API consumers inside nndeploy as the target audience (`framework/include/nndeploy/egraph/README.md:7-8`).
+- Test coverage is direct C++ gtest coverage in `test/source/nndeploy/egraph/egraph_test.cc`; no Python wrapper or pybind usage was found.
+
+Conclusion
+- The reviewed changes stay inside the roadmap's production-usability scope.
+- Deferred parser and incremental rebuild work remained deferred.
+- All 14 roadmap tasks are marked complete.
+- Final F4 verdict: APPROVE.

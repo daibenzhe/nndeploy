@@ -1,0 +1,225 @@
+Running main() from /home/dbz/project/nndeploy/third_party/googletest/googletest/src/gtest_main.cc
+[==========] Running 96 tests from 9 test suites.
+[----------] Global test environment set-up.
+[----------] 13 tests from EGraphTest
+[ RUN      ] EGraphTest.AddDeduplicatesEquivalentNodes
+[       OK ] EGraphTest.AddDeduplicatesEquivalentNodes (0 ms)
+[ RUN      ] EGraphTest.MergeAndRebuildDeduplicateCongruentParents
+[       OK ] EGraphTest.MergeAndRebuildDeduplicateCongruentParents (0 ms)
+[ RUN      ] EGraphTest.RebuildCanonicalizesNestedParents
+[       OK ] EGraphTest.RebuildCanonicalizesNestedParents (0 ms)
+[ RUN      ] EGraphTest.AnalysisDataMergesAcrossClasses
+[       OK ] EGraphTest.AnalysisDataMergesAcrossClasses (0 ms)
+[ RUN      ] EGraphTest.ParentsAreTrackedAfterRebuild
+[       OK ] EGraphTest.ParentsAreTrackedAfterRebuild (0 ms)
+[ RUN      ] EGraphTest.MergeIsIdempotent
+[       OK ] EGraphTest.MergeIsIdempotent (0 ms)
+[ RUN      ] EGraphTest.RebuildIsIdempotent
+[       OK ] EGraphTest.RebuildIsIdempotent (0 ms)
+[ RUN      ] EGraphTest.AddAfterMergeBeforeRebuildCanonicalizesChildren
+[       OK ] EGraphTest.AddAfterMergeBeforeRebuildCanonicalizesChildren (0 ms)
+[ RUN      ] EGraphTest.InvalidIdsThrow
+[       OK ] EGraphTest.InvalidIdsThrow (0 ms)
+[ RUN      ] EGraphTest.RecExprStoresTopologicallyOrderedNodes
+[       OK ] EGraphTest.RecExprStoresTopologicallyOrderedNodes (0 ms)
+[ RUN      ] EGraphTest.RecExprRejectsForwardReferences
+[       OK ] EGraphTest.RecExprRejectsForwardReferences (0 ms)
+[ RUN      ] EGraphTest.VarParsesSymbolicAndNumericForms
+[       OK ] EGraphTest.VarParsesSymbolicAndNumericForms (0 ms)
+[ RUN      ] EGraphTest.SubstInsertAndLookupWork
+[       OK ] EGraphTest.SubstInsertAndLookupWork (0 ms)
+[----------] 13 tests from EGraphTest (0 ms total)
+
+[----------] 5 tests from PatternTest
+[ RUN      ] PatternTest.VariableOnlyPattern
+[       OK ] PatternTest.VariableOnlyPattern (0 ms)
+[ RUN      ] PatternTest.RepeatedVarsDeduplicatedInVarsList
+[       OK ] PatternTest.RepeatedVarsDeduplicatedInVarsList (0 ms)
+[ RUN      ] PatternTest.NestedOperatorPattern
+[       OK ] PatternTest.NestedOperatorPattern (0 ms)
+[ RUN      ] PatternTest.VariableWithChildrenRejected
+[       OK ] PatternTest.VariableWithChildrenRejected (0 ms)
+[ RUN      ] PatternTest.ConversionFromRecExpr
+[       OK ] PatternTest.ConversionFromRecExpr (0 ms)
+[----------] 5 tests from PatternTest (0 ms total)
+
+[----------] 5 tests from MatcherTest
+[ RUN      ] MatcherTest.SearchInOneEclass
+[       OK ] MatcherTest.SearchInOneEclass (0 ms)
+[ RUN      ] MatcherTest.WholeGraphSearchFindsOperator
+[       OK ] MatcherTest.WholeGraphSearchFindsOperator (0 ms)
+[ RUN      ] MatcherTest.RepeatedVarEqualityConstraint
+[       OK ] MatcherTest.RepeatedVarEqualityConstraint (0 ms)
+[ RUN      ] MatcherTest.NoMatchCase
+[       OK ] MatcherTest.NoMatchCase (0 ms)
+[ RUN      ] MatcherTest.SearchAfterMerge
+[       OK ] MatcherTest.SearchAfterMerge (0 ms)
+[----------] 5 tests from MatcherTest (0 ms total)
+
+[----------] 5 tests from RewriteTest
+[ RUN      ] RewriteTest.RhsUnboundVariableRejected
+[       OK ] RewriteTest.RhsUnboundVariableRejected (0 ms)
+[ RUN      ] RewriteTest.AdditiveIdentityRewrite
+[       OK ] RewriteTest.AdditiveIdentityRewrite (0 ms)
+[ RUN      ] RewriteTest.CommutativityRewrite
+[       OK ] RewriteTest.CommutativityRewrite (0 ms)
+[ RUN      ] RewriteTest.IdempotentRepeatedApplication
+[       OK ] RewriteTest.IdempotentRepeatedApplication (0 ms)
+[ RUN      ] RewriteTest.AddExprFromRecExpr
+[       OK ] RewriteTest.AddExprFromRecExpr (0 ms)
+[----------] 5 tests from RewriteTest (0 ms total)
+
+[----------] 9 tests from ExtractorTest
+[ RUN      ] ExtractorTest.SimpleLeafExtraction
+[       OK ] ExtractorTest.SimpleLeafExtraction (0 ms)
+[ RUN      ] ExtractorTest.ExtractSmallerTermFromEquivalentClass
+[       OK ] ExtractorTest.ExtractSmallerTermFromEquivalentClass (0 ms)
+[ RUN      ] ExtractorTest.ExtractAfterRewrite
+[       OK ] ExtractorTest.ExtractAfterRewrite (0 ms)
+[ RUN      ] ExtractorTest.NestedReconstruction
+[       OK ] ExtractorTest.NestedReconstruction (0 ms)
+[ RUN      ] ExtractorTest.FindBestCostAndNode
+[       OK ] ExtractorTest.FindBestCostAndNode (0 ms)
+[ RUN      ] ExtractorTest.AstDepthCostFunction
+[       OK ] ExtractorTest.AstDepthCostFunction (0 ms)
+[ RUN      ] ExtractorTest.SharedChildDeduplication
+[       OK ] ExtractorTest.SharedChildDeduplication (0 ms)
+[ RUN      ] ExtractorTest.ChooseBestAmongMultipleEquivalents
+[       OK ] ExtractorTest.ChooseBestAmongMultipleEquivalents (0 ms)
+[ RUN      ] ExtractorTest.InvalidIdThrows
+[       OK ] ExtractorTest.InvalidIdThrows (0 ms)
+[----------] 9 tests from ExtractorTest (0 ms total)
+
+[----------] 17 tests from RunnerTest
+[ RUN      ] RunnerTest.SaturatesWithAdditiveIdentity
+[       OK ] RunnerTest.SaturatesWithAdditiveIdentity (0 ms)
+[ RUN      ] RunnerTest.IterationLimitStopsRunner
+[       OK ] RunnerTest.IterationLimitStopsRunner (0 ms)
+[ RUN      ] RunnerTest.NodeLimitStopsRunner
+[       OK ] RunnerTest.NodeLimitStopsRunner (0 ms)
+[ RUN      ] RunnerTest.ReportContainsCorrectData
+[       OK ] RunnerTest.ReportContainsCorrectData (0 ms)
+[ RUN      ] RunnerTest.IterationDataTracksAppliedRules
+[       OK ] RunnerTest.IterationDataTracksAppliedRules (0 ms)
+[ RUN      ] RunnerTest.HookCanStopRunner
+[       OK ] RunnerTest.HookCanStopRunner (0 ms)
+[ RUN      ] RunnerTest.MultipleRulesSaturate
+[       OK ] RunnerTest.MultipleRulesSaturate (0 ms)
+[ RUN      ] RunnerTest.EmptyRulesSaturateImmediately
+[       OK ] RunnerTest.EmptyRulesSaturateImmediately (0 ms)
+[ RUN      ] RunnerTest.RootsAreTracked
+[       OK ] RunnerTest.RootsAreTracked (0 ms)
+[ RUN      ] RunnerTest.BackoffSchedulerBansExplosiveRule
+[       OK ] RunnerTest.BackoffSchedulerBansExplosiveRule (0 ms)
+[ RUN      ] RunnerTest.SimpleSchedulerPassesThrough
+[       OK ] RunnerTest.SimpleSchedulerPassesThrough (0 ms)
+[ RUN      ] RunnerTest.StopReasonToStringCoversAllVariants
+[       OK ] RunnerTest.StopReasonToStringCoversAllVariants (0 ms)
+[ RUN      ] RunnerTest.BackoffSchedulerBanDurationIsExact
+[       OK ] RunnerTest.BackoffSchedulerBanDurationIsExact (0 ms)
+[ RUN      ] RunnerTest.HookMutationPreventsImmediateSaturation
+[       OK ] RunnerTest.HookMutationPreventsImmediateSaturation (0 ms)
+[ RUN      ] RunnerTest.RunnerIsReusable
+[       OK ] RunnerTest.RunnerIsReusable (0 ms)
+[ RUN      ] RunnerTest.WithSchedulerNullptrRejected
+[       OK ] RunnerTest.WithSchedulerNullptrRejected (0 ms)
+[ RUN      ] RunnerTest.ReportBeforeRunIsValid
+[       OK ] RunnerTest.ReportBeforeRunIsValid (0 ms)
+[----------] 17 tests from RunnerTest (1 ms total)
+
+[----------] 13 tests from SearcherApplierTest
+[ RUN      ] SearcherApplierTest.PatternSearcherDirectly
+[       OK ] SearcherApplierTest.PatternSearcherDirectly (0 ms)
+[ RUN      ] SearcherApplierTest.PatternApplierDirectly
+[       OK ] SearcherApplierTest.PatternApplierDirectly (0 ms)
+[ RUN      ] SearcherApplierTest.CustomSearcherFindsLeaves
+[       OK ] SearcherApplierTest.CustomSearcherFindsLeaves (0 ms)
+[ RUN      ] SearcherApplierTest.CustomApplierWrapsNode
+[       OK ] SearcherApplierTest.CustomApplierWrapsNode (0 ms)
+[ RUN      ] SearcherApplierTest.GenericRewriteConstructor
+[       OK ] SearcherApplierTest.GenericRewriteConstructor (0 ms)
+[ RUN      ] SearcherApplierTest.NullSearcherRejected
+[       OK ] SearcherApplierTest.NullSearcherRejected (0 ms)
+[ RUN      ] SearcherApplierTest.NullApplierRejected
+[       OK ] SearcherApplierTest.NullApplierRejected (0 ms)
+[ RUN      ] SearcherApplierTest.GenericRewriteSearchAndApply
+[       OK ] SearcherApplierTest.GenericRewriteSearchAndApply (0 ms)
+[ RUN      ] SearcherApplierTest.GenericRewriteViaRunner
+[       OK ] SearcherApplierTest.GenericRewriteViaRunner (0 ms)
+[ RUN      ] SearcherApplierTest.PatternRewriteLhsRhsAccessors
+[       OK ] SearcherApplierTest.PatternRewriteLhsRhsAccessors (0 ms)
+[ RUN      ] SearcherApplierTest.MixedRulesInRunner
+[       OK ] SearcherApplierTest.MixedRulesInRunner (0 ms)
+[ RUN      ] SearcherApplierTest.CustomApplierApplyMatchesOverride
+[       OK ] SearcherApplierTest.CustomApplierApplyMatchesOverride (0 ms)
+[ RUN      ] SearcherApplierTest.SearcherSearchEclassDefault
+[       OK ] SearcherApplierTest.SearcherSearchEclassDefault (0 ms)
+[----------] 13 tests from SearcherApplierTest (0 ms total)
+
+[----------] 12 tests from MultiPatternTest
+[ RUN      ] MultiPatternTest.EmptyPatternsRejected
+[       OK ] MultiPatternTest.EmptyPatternsRejected (0 ms)
+[ RUN      ] MultiPatternTest.SinglePatternDelegatesToPattern
+[       OK ] MultiPatternTest.SinglePatternDelegatesToPattern (0 ms)
+[ RUN      ] MultiPatternTest.TwoPatternsSharedVariables
+[       OK ] MultiPatternTest.TwoPatternsSharedVariables (0 ms)
+[ RUN      ] MultiPatternTest.NoMatchWhenSecondPatternFails
+[       OK ] MultiPatternTest.NoMatchWhenSecondPatternFails (0 ms)
+[ RUN      ] MultiPatternTest.SharedVariablesConstrainBindings
+[       OK ] MultiPatternTest.SharedVariablesConstrainBindings (0 ms)
+[ RUN      ] MultiPatternTest.MatchAfterMerge
+[       OK ] MultiPatternTest.MatchAfterMerge (0 ms)
+[ RUN      ] MultiPatternTest.ThreePatterns
+[       OK ] MultiPatternTest.ThreePatterns (0 ms)
+[ RUN      ] MultiPatternTest.DisjointVariables
+[       OK ] MultiPatternTest.DisjointVariables (0 ms)
+[ RUN      ] MultiPatternTest.SearchEclassMethod
+[       OK ] MultiPatternTest.SearchEclassMethod (0 ms)
+[ RUN      ] MultiPatternTest.MultiPatternSearcherInRewrite
+[       OK ] MultiPatternTest.MultiPatternSearcherInRewrite (0 ms)
+[ RUN      ] MultiPatternTest.VarsUnionIsCorrect
+[       OK ] MultiPatternTest.VarsUnionIsCorrect (0 ms)
+[ RUN      ] MultiPatternTest.MultiPatternSearcherViaRunner
+[       OK ] MultiPatternTest.MultiPatternSearcherViaRunner (0 ms)
+[----------] 12 tests from MultiPatternTest (0 ms total)
+
+[----------] 17 tests from ExplanationTest
+[ RUN      ] ExplanationTest.EnableExplanationsAfterAddingThrows
+[       OK ] ExplanationTest.EnableExplanationsAfterAddingThrows (0 ms)
+[ RUN      ] ExplanationTest.ExplainWithoutEnablingThrows
+[       OK ] ExplanationTest.ExplainWithoutEnablingThrows (0 ms)
+[ RUN      ] ExplanationTest.TrivialSameNodeExplanation
+[       OK ] ExplanationTest.TrivialSameNodeExplanation (0 ms)
+[ RUN      ] ExplanationTest.DirectMergeWithNamedRule
+[       OK ] ExplanationTest.DirectMergeWithNamedRule (0 ms)
+[ RUN      ] ExplanationTest.CongruenceMergeExplanation
+[       OK ] ExplanationTest.CongruenceMergeExplanation (0 ms)
+[ RUN      ] ExplanationTest.ExplainAfterRewriteRule
+[       OK ] ExplanationTest.ExplainAfterRewriteRule (0 ms)
+[ RUN      ] ExplanationTest.ProofDirectionIsRecorded
+[       OK ] ExplanationTest.ProofDirectionIsRecorded (0 ms)
+[ RUN      ] ExplanationTest.FlatExplanationConversion
+[       OK ] ExplanationTest.FlatExplanationConversion (0 ms)
+[ RUN      ] ExplanationTest.FlatTermGetRecExpr
+[       OK ] ExplanationTest.FlatTermGetRecExpr (0 ms)
+[ RUN      ] ExplanationTest.NonEquivalentIdsThrow
+[       OK ] ExplanationTest.NonEquivalentIdsThrow (0 ms)
+[ RUN      ] ExplanationTest.ExplainEquivalenceViaRecExpr
+[       OK ] ExplanationTest.ExplainEquivalenceViaRecExpr (0 ms)
+[ RUN      ] ExplanationTest.AlternateRewriteForAlreadyEqual
+[       OK ] ExplanationTest.AlternateRewriteForAlreadyEqual (0 ms)
+[ RUN      ] ExplanationTest.MultiStepTransitiveProof
+[       OK ] ExplanationTest.MultiStepTransitiveProof (0 ms)
+[ RUN      ] ExplanationTest.ExplanationsEnabledAccessor
+[       OK ] ExplanationTest.ExplanationsEnabledAccessor (0 ms)
+[ RUN      ] ExplanationTest.NodeStorageGrowsWithAdds
+[       OK ] ExplanationTest.NodeStorageGrowsWithAdds (0 ms)
+[ RUN      ] ExplanationTest.DuplicateAddCreatesNewIdWhenExplaining
+[       OK ] ExplanationTest.DuplicateAddCreatesNewIdWhenExplaining (0 ms)
+[ RUN      ] ExplanationTest.ExistingTestsStillPassWithExplanations
+[       OK ] ExplanationTest.ExistingTestsStillPassWithExplanations (0 ms)
+[----------] 17 tests from ExplanationTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 96 tests from 9 test suites ran. (3 ms total)
+[  PASSED  ] 96 tests.

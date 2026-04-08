@@ -1,0 +1,138 @@
+QA Replay F3 - nndeploy::egraph Quarter Roadmap
+Executed: 2026-04-08
+Working directory: /home/dbz/project/nndeploy
+
+================================================================================
+STEP 1: BUILD
+Command: make egraph_test -j4
+================================================================================
+[  0%] Built target safetensors_cpp
+[  2%] Built target gtest
+[  2%] Built target gtest_main
+[ 92%] Built target nndeploy_framework
+[ 96%] Built target nndeploy_plugin_basic
+[ 96%] Built target nndeploy_plugin_infer
+[ 98%] Built target nndeploy_plugin_tokenizer
+[100%] Built target egraph_test
+
+RESULT: PASS
+
+================================================================================
+STEP 2: T11 - Canonical smoke scenario
+Command: ./build/egraph_test --gtest_filter=SmokeTest.EndToEndAdoptionFlow
+================================================================================
+[==========] Running 1 test from 1 test suite.
+[ RUN      ] SmokeTest.EndToEndAdoptionFlow
+[       OK ] SmokeTest.EndToEndAdoptionFlow (0 ms)
+[  PASSED  ] 1 test.
+
+RESULT: PASS (1/1 tests)
+
+================================================================================
+STEP 3: T4 - Explanation regression
+Command: ./build/egraph_test --gtest_filter=ExplanationTest.*
+================================================================================
+[==========] Running 31 tests from 1 test suite.
+[  PASSED  ] 31 tests.
+
+RESULT: PASS (31/31 tests)
+
+================================================================================
+STEP 4: T5 - Runner diagnostics
+Command: ./build/egraph_test --gtest_filter=RunnerTest.*
+================================================================================
+[==========] Running 26 tests from 1 test suite.
+[  PASSED  ] 26 tests.
+
+RESULT: PASS (26/26 tests)
+
+================================================================================
+STEP 5: T2 - Error contract regression
+Command: ./build/egraph_test --gtest_filter=ErrorContractTest.*
+================================================================================
+[==========] Running 28 tests from 1 test suite.
+[  PASSED  ] 28 tests.
+
+RESULT: PASS (28/28 tests)
+
+================================================================================
+STEP 6: T8 - Interop workflow regression
+Command: ./build/egraph_test --gtest_filter=InteropWorkflowTest.*
+================================================================================
+[==========] Running 4 tests from 1 test suite.
+[  PASSED  ] 4 tests.
+
+RESULT: PASS (4/4 tests)
+
+================================================================================
+STEP 7: T9 - Cookbook smoke tests
+Command: ./build/egraph_test --gtest_filter=CookbookWorkflowTest.*
+================================================================================
+[==========] Running 6 tests from 1 test suite.
+[  PASSED  ] 6 tests.
+
+RESULT: PASS (6/6 tests)
+
+================================================================================
+STEP 8: T10 - API stability smoke
+Command: ./build/egraph_test --gtest_filter=ApiStabilitySmokeTest.*
+================================================================================
+[==========] Running 6 tests from 1 test suite.
+[  PASSED  ] 6 tests.
+
+RESULT: PASS (6/6 tests)
+
+================================================================================
+STEP 9: T12 - Edge-case resilience
+Command: ./build/egraph_test --gtest_filter=EdgeCaseResilienceTest.*
+================================================================================
+[==========] Running 5 tests from 1 test suite.
+[  PASSED  ] 5 tests.
+
+RESULT: PASS (5/5 tests)
+
+================================================================================
+STEP 10: FULL SUITE
+Command: ./build/egraph_test
+================================================================================
+[==========] Running 176 tests from 17 test suites.
+[  PASSED  ] 176 tests.
+
+Test suites (17):
+  EGraphTest:            13 tests PASSED
+  RecExprErgonomicsTest:  3 tests PASSED
+  PatternTest:            5 tests PASSED
+  PatternErgonomicsTest:  4 tests PASSED
+  MatcherTest:            5 tests PASSED
+  RewriteTest:            5 tests PASSED
+  ExtractorTest:          9 tests PASSED
+  RunnerTest:            26 tests PASSED
+  SearcherApplierTest:   13 tests PASSED
+  MultiPatternTest:      12 tests PASSED
+  ExplanationTest:       31 tests PASSED
+  ErrorContractTest:     28 tests PASSED
+  ApiStabilitySmokeTest:  6 tests PASSED
+  InteropWorkflowTest:    4 tests PASSED
+  CookbookWorkflowTest:   6 tests PASSED
+  EdgeCaseResilienceTest: 5 tests PASSED
+  SmokeTest:              1 test  PASSED
+
+RESULT: PASS (176/176 tests)
+
+================================================================================
+SUMMARY
+================================================================================
+Step 1  (Build):                         PASS
+Step 2  (T11 - SmokeTest):               PASS  1/1
+Step 3  (T4  - ExplanationTest):         PASS  31/31
+Step 4  (T5  - RunnerTest):              PASS  26/26
+Step 5  (T2  - ErrorContractTest):       PASS  28/28
+Step 6  (T8  - InteropWorkflowTest):     PASS  4/4
+Step 7  (T9  - CookbookWorkflowTest):    PASS  6/6
+Step 8  (T10 - ApiStabilitySmokeTest):   PASS  6/6
+Step 9  (T12 - EdgeCaseResilienceTest):  PASS  5/5
+Step 10 (Full suite):                    PASS  176/176
+
+VERDICT: APPROVE
+Steps passed: 10/10
+Total tests: 176

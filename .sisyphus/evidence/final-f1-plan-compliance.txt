@@ -1,0 +1,142 @@
+Plan Compliance Audit — nndeploy::egraph quarter roadmap
+
+Sources inspected
+- .sisyphus/plans/egraph-quarter-roadmap.md
+- framework/include/nndeploy/egraph/README.md
+- test/source/nndeploy/egraph/egraph_test.cc
+- framework/include/nndeploy/egraph/recexpr.h
+- framework/include/nndeploy/egraph/pattern.h
+- framework/include/nndeploy/egraph/egraph.h
+- Key evidence files under .sisyphus/evidence/
+
+Plan Must Have items
+- PASS — Stable quarter scope centered on production usability.
+  Evidence: README quarter contract is explicitly usability-first (`README.md:3-30`), cookbook/adoption/release sections are present, and the tests added are adoption-oriented rather than parity/perf-oriented.
+- PASS — TDD where practical for core logic changes.
+  Evidence: task acceptance criteria require focused suites, and evidence files show executable coverage for error contracts, explanations, runner behavior, interop, smoke, and edge cases.
+- PASS — README remains the living spec/TODO tracker.
+  Evidence: README now carries quarter contract, stability notes, cookbook workflows, release checklist, and next-quarter decision package.
+- PASS — No hidden reliance on manual human-only verification.
+  Evidence: plan QA policy is agent-executed; evidence files contain gtest/build outputs for the audited tasks.
+
+Plan Must NOT Have guardrails
+- HONORED — No major incremental rebuild redesign this quarter unless re-scoped by user.
+  Evidence: `EGraph::rebuild()` is still global in `egraph.h:596-659`; no partial/incremental rebuild path was found. `dirty_roots_` exists only as a coarse trigger, not a fine-grained incremental worklist.
+- HONORED — No broad egg-parity chase that does not materially improve usability.
+  Evidence: work is concentrated in README contract/stability docs, ergonomics helpers, regression tests, smoke tests, and release guidance.
+- HONORED — No parser expansion as a must-ship quarter requirement unless blocker through documented evidence.
+  Evidence: README explicitly defers parser work; `pattern.h` only adds parser-free helpers (`makePatternVar`, `makePatternNode`, `PatternBuilder`); no parser entry point like `parseExpr` exists.
+- HONORED — No silent public API breakage without README callout and explicit rationale.
+  Evidence: README includes “Public API stability status”, “Provisional / likely-to-change APIs”, and “Naming and compatibility notes” sections (`README.md:31-63`). No unannounced breaking change surfaced in the audited files.
+- HONORED — No task completion without concrete tests or executable QA scenarios.
+  Evidence: each task in the roadmap has explicit acceptance criteria and QA scenarios; requested evidence files are present and contain executable outputs.
+
+Task Acceptance Criteria Audit
+Task 1 — Quarter contract + README scope hardening
+- PASS — README contains explicit sections for quarter scope, deferrals, breaking-change policy, and target user persona.
+- PASS — README text matches actual supported subsystem behavior.
+- PASS — Evidence exists for unchanged baseline build (`task-1-build.txt`) and contract excerpts (`task-1-readme-contract.txt`).
+
+Task 2 — Error/exception contract audit for core APIs
+- PASS — Dedicated `ErrorContractTest.*` suite covers foreign ids, invalid defaults, malformed `RecExpr`/`Pattern` usage, and missing substitutions.
+- PASS — Misuse paths are checked against consistent exception classes.
+- PASS — Evidence file `task-2-error-contract.txt` shows the focused suite passing.
+
+Task 3 — Test fixture and suite maintainability cleanup
+- PASS — Shared setup logic is centralized via reusable helpers near the top of `egraph_test.cc` (for graphs, exprs, patterns, and equivalence checks).
+- PASS — Existing suite names/semantics remain stable; prior suites are preserved and extended rather than replaced.
+- PASS — Evidence files `task-3-suite-baseline.txt` and `task-3-helper-usage.txt` exist.
+
+Task 4 — Explanation usability hardening
+- PASS — `ExplanationTest.*` covers direct merge, congruence, transitive proofs, alternate rewrite, and error paths.
+- PASS — README documents enablement, free-function entry points, and throw behavior in “Explanation usage guide”.
+- PASS — Evidence file `task-4-explanations.txt` shows the focused suite passing.
+
+Task 5 — Runner/report diagnostic hardening
+- PASS — `RunnerTest.*` covers stop reasons, report consistency, timing/report fields, and rule-application visibility.
+- PASS — Diagnostic wording is documented in README `StopReason`, `Iteration`, `Report`, and `Runner` sections.
+- PASS — Evidence file `task-5-runner.txt` shows the focused suite passing.
+
+Task 6 — Structural builder ergonomics for RecExpr usage
+- PASS — `RecExprBuilder<Op>` exists in `recexpr.h` and keeps explicit topological validation.
+- PASS — Focused `RecExprErgonomicsTest.*` coverage exists for happy-path, invalid references, and round-trip behavior.
+- PASS — README cookbook and main type docs include the ergonomic path.
+
+Task 7 — Structural builder ergonomics for Pattern usage
+- PASS — `PatternBuilder<Op>`, `makePatternVar`, and `makePatternNode` exist in `pattern.h`.
+- PASS — `PatternErgonomicsTest.*` covers nested patterns, repeated-variable semantics, malformed variable-with-children rejection, and round-trip behavior.
+- PASS — README documents the parser-free pattern builder path.
+
+Task 8 — Interop regression pack for rewrite/extract/explain
+- PASS — `InteropWorkflowTest.*` exists and includes rewrite → rebuild → extract → explain coverage (`MultiStepRewriteExtractExplain`, plus focused extract/explain variants).
+- PASS — Interop coverage stays within quarter-supported workflows.
+- PASS — Evidence file `task-8-interop.txt` shows the focused interop/regression filter passing.
+
+Task 9 — Cookbook workflow docs + smoke-backed examples
+- PASS — README has a “Cookbook Workflows” section for the quarter-supported flows.
+- PASS — Each cookbook workflow maps to a `CookbookWorkflowTest.*` case.
+- PASS — Evidence file `task-9-cookbook.txt` shows cookbook tests passing.
+
+Task 10 — Public API stability audit + compatibility notes
+- PASS — README clearly distinguishes stable quarter APIs from provisional conveniences.
+- PASS — `ApiStabilitySmokeTest.*` exercises intended public entry points directly.
+- PASS — Evidence file `task-10-stability-audit.txt` shows the stability smoke suite passing and documents the audit summary.
+
+Task 11 — End-to-end adoption smoke scenario
+- PASS — `SmokeTest.EndToEndAdoptionFlow` exists and covers build expression → runner saturation → extraction → explanation.
+- PASS — README points to it as the canonical quarter smoke scenario (`README.md:18` and release checklist).
+- PASS — Evidence file `task-11-smoke.txt` shows the smoke test passing.
+
+Task 12 — Edge-case resilience pack
+- PASS — `EdgeCaseResilienceTest.*` covers already-equal, no-match, cycle-resilient extraction, explanation misuse, and zero-rewrite saturation.
+- PASS — Audited changes remain evidence-led and tightly scoped.
+- PASS — Evidence file `task-12-edge-cases.txt` shows the focused filter passing.
+
+Task 13 — Quarter-close release checklist + support docs
+- PASS — README includes a concrete “Quarter-Close Release Checklist” with executable references.
+- PASS — Deferred items remain explicit in the checklist section.
+- PASS — Evidence file `task-13-checklist.txt` exists and captures the checklist excerpts.
+
+Task 14 — Next-quarter decision package
+- PASS — README contains explicit parser-first vs incremental-rebuild-first criteria.
+- PASS — Decision criteria cite concrete quarter evidence: ergonomics helpers, cookbook smoke tests, adoption smoke tests, runner timing/limit signals.
+- PASS — No deferred-work implementation was introduced; evidence file `task-14-decision-package.txt` exists.
+
+Requested Must-Have Checklist
+- PASS — README has explicit sections for quarter scope, deferrals, breaking-change policy, and target user persona.
+- PASS — `ErrorContractTest.*` suite exists with misuse coverage.
+- PASS — `ExplanationTest.*` covers direct/congruence/transitive/alternate-rewrite paths.
+- PASS — `RunnerTest.*` covers stop reasons and report consistency.
+- PASS — `RecExprBuilder<Op>` exists in `recexpr.h` with focused tests.
+- PASS — `PatternBuilder<Op>`, `makePatternVar`, `makePatternNode` exist in `pattern.h` with focused tests.
+- PASS — `ApiStabilitySmokeTest.*` suite exists.
+- PASS — `InteropWorkflowTest.*` suite exists with rewrite → rebuild → extract → explain coverage.
+- PASS — README has Cookbook Workflows section backed by `CookbookWorkflowTest.*`.
+- PASS — README has Next-Quarter Decision Package section with concrete criteria.
+- PASS — `SmokeTest.EndToEndAdoptionFlow` exists and evidence shows it passes.
+- PASS — `EdgeCaseResilienceTest.*` suite exists.
+- PASS — README has Quarter-Close Release Checklist section.
+
+Requested Must-NOT-Have Guardrails
+- HONORED — No parser implementation (no `parseExpr`, no s-expression tokenizer found in the audited egraph headers).
+- HONORED — No incremental rebuild implementation (no partial rebuild path or fine-grained dirty-set worklist found; rebuild remains global).
+- HONORED — No silent public API breakage without README callout.
+- HONORED — No tasks completed without concrete tests or QA scenarios.
+
+Evidence files requested by the audit
+- PRESENT — `.sisyphus/evidence/task-1-readme-contract.txt`
+- PRESENT — `.sisyphus/evidence/task-2-error-contract.txt`
+- PRESENT — `.sisyphus/evidence/task-4-explanations.txt`
+- PRESENT — `.sisyphus/evidence/task-5-runner.txt`
+- PRESENT — `.sisyphus/evidence/task-8-interop.txt`
+- PRESENT — `.sisyphus/evidence/task-9-cookbook.txt`
+- PRESENT — `.sisyphus/evidence/task-10-stability-audit.txt`
+- PRESENT — `.sisyphus/evidence/task-11-smoke.txt`
+- PRESENT — `.sisyphus/evidence/task-12-edge-cases.txt`
+- PRESENT — `.sisyphus/evidence/task-13-checklist.txt`
+- PRESENT — `.sisyphus/evidence/task-14-decision-package.txt`
+
+Verdict rationale
+All audited must-have deliverables are present in the README/tests/headers, the requested evidence files exist and show passing focused QA, and the deferred parser/incremental-rebuild work remains deferred in implementation terms.
+
+VERDICT: APPROVE

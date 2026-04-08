@@ -1,0 +1,44 @@
+Running main() from /home/dbz/project/nndeploy/third_party/googletest/googletest/src/gtest_main.cc
+Note: Google Test filter = RecExprErgonomicsTest.*:EGraphTest.RecExpr*:ExtractorTest.*
+[==========] Running 14 tests from 3 test suites.
+[----------] Global test environment set-up.
+[----------] 2 tests from EGraphTest
+[ RUN      ] EGraphTest.RecExprStoresTopologicallyOrderedNodes
+[       OK ] EGraphTest.RecExprStoresTopologicallyOrderedNodes (0 ms)
+[ RUN      ] EGraphTest.RecExprRejectsForwardReferences
+[       OK ] EGraphTest.RecExprRejectsForwardReferences (0 ms)
+[----------] 2 tests from EGraphTest (0 ms total)
+
+[----------] 3 tests from RecExprErgonomicsTest
+[ RUN      ] RecExprErgonomicsTest.BuildsTopologicalTreeWithExplicitChildren
+[       OK ] RecExprErgonomicsTest.BuildsTopologicalTreeWithExplicitChildren (0 ms)
+[ RUN      ] RecExprErgonomicsTest.RejectsForwardReferences
+[       OK ] RecExprErgonomicsTest.RejectsForwardReferences (0 ms)
+[ RUN      ] RecExprErgonomicsTest.RoundTripMatchesManualRecExpr
+[       OK ] RecExprErgonomicsTest.RoundTripMatchesManualRecExpr (0 ms)
+[----------] 3 tests from RecExprErgonomicsTest (0 ms total)
+
+[----------] 9 tests from ExtractorTest
+[ RUN      ] ExtractorTest.SimpleLeafExtraction
+[       OK ] ExtractorTest.SimpleLeafExtraction (0 ms)
+[ RUN      ] ExtractorTest.ExtractSmallerTermFromEquivalentClass
+[       OK ] ExtractorTest.ExtractSmallerTermFromEquivalentClass (0 ms)
+[ RUN      ] ExtractorTest.ExtractAfterRewrite
+[       OK ] ExtractorTest.ExtractAfterRewrite (0 ms)
+[ RUN      ] ExtractorTest.NestedReconstruction
+[       OK ] ExtractorTest.NestedReconstruction (0 ms)
+[ RUN      ] ExtractorTest.FindBestCostAndNode
+[       OK ] ExtractorTest.FindBestCostAndNode (0 ms)
+[ RUN      ] ExtractorTest.AstDepthCostFunction
+[       OK ] ExtractorTest.AstDepthCostFunction (0 ms)
+[ RUN      ] ExtractorTest.SharedChildDeduplication
+[       OK ] ExtractorTest.SharedChildDeduplication (0 ms)
+[ RUN      ] ExtractorTest.ChooseBestAmongMultipleEquivalents
+[       OK ] ExtractorTest.ChooseBestAmongMultipleEquivalents (0 ms)
+[ RUN      ] ExtractorTest.InvalidIdThrows
+[       OK ] ExtractorTest.InvalidIdThrows (0 ms)
+[----------] 9 tests from ExtractorTest (0 ms total)
+
+[----------] Global test environment tear-down
+[==========] 14 tests from 3 test suites ran. (0 ms total)
+[  PASSED  ] 14 tests.
