@@ -56,6 +56,16 @@ set(OP_TEST_PATH ${ROOT_PATH}/test/source/nndeploy/op)
 add_test(edge_test "")
 add_test(graph_test "")
 
+set(EGRAPH_TEST_PATH ${ROOT_PATH}/test/source/nndeploy/egraph)
+add_executable(egraph_test ${EGRAPH_TEST_PATH}/egraph_test.cc)
+target_link_libraries(egraph_test GTest::gtest_main ${DEPEND_LIBRARY} ${SYSTEM_LIBRARY} ${THIRD_PARTY_LIBRARY})
+if (APPLE)
+  set_target_properties(egraph_test PROPERTIES LINK_FLAGS "-Wl,-undefined,dynamic_lookup")
+elseif (UNIX)
+  set_target_properties(egraph_test PROPERTIES LINK_FLAGS "-Wl,--no-as-needed")
+endif()
+install(TARGETS egraph_test RUNTIME DESTINATION ${NNDEPLOY_INSTALL_TEST_PATH})
+
 # SiLU test
 add_executable(silu_test ${OP_TEST_PATH}/silu_test.cc)
 target_link_libraries(silu_test GTest::gtest_main ${DEPEND_LIBRARY} ${SYSTEM_LIBRARY} ${THIRD_PARTY_LIBRARY})
