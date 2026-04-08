@@ -169,3 +169,18 @@
 ### Evidence
 - `.sisyphus/evidence/task-8-interop.txt`
 - `.sisyphus/evidence/task-8-full-suite.txt`
+
+## Task 9: Cookbook workflow docs + smoke-backed examples
+
+- **Cookbook Patterns**: Established a pattern for README documentation where each code snippet is explicitly mapped to a named gtest case. This ensures documentation stays "fresh" and executable.
+- **Verification Workflow**: Integrated 6 new smoke tests in `CookbookWorkflowTest` within `egraph_test.cc` to back the new "Cookbook Workflows" section.
+- **API Nuance**: Confirmed `Var` comparison in tests should use `Var::fromString("?x")` rather than `Var.name()` (which doesn't exist in the current public contract).
+- **Explanation Setup**: Re-verified that `withExplanationsEnabled()` must be the first call on a fresh e-graph to avoid `std::logic_error`.
+
+## [2026-04-08] Task 14: Next-quarter decision package
+
+### Decision evidence captured
+- Added a forward-looking `Next-Quarter Decision Package` section to the egraph README; it explicitly states that neither parser work nor incremental rebuild is being implemented this quarter.
+- Parser-first criteria are grounded in quarter ergonomics evidence: `RecExprBuilder` and `PatternBuilder` reduced bookkeeping, but cookbook and API-smoke-backed workflows still require explicit topological C++ node construction.
+- Incremental-rebuild-first criteria are grounded in current architecture: `EGraph::rebuild()` remains global, `dirty_roots_` is only a trigger, and `Runner::run()` still performs rebuild before and during every saturation run.
+- Tie-breaker recommendation stays usability-first unless future smoke/resilience data shows rebuild cost, `NodeLimit`, `TimeLimit`, or `rebuild_time` dominating real workloads.

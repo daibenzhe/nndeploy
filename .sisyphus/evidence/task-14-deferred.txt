@@ -1,0 +1,16 @@
+git diff --stat HEAD
+
+ .sisyphus/notepads/egraph-quarter-roadmap/learnings.md | 15 +++++++++++++++
+ framework/include/nndeploy/egraph/README.md            |  8 ++++++++
+ test/config.cmake                                      | 12 +++++++++++-
+ third_party/safetensors-cpp                            |  0
+ 4 files changed, 34 insertions(+), 1 deletion(-)
+
+Task-scoped egraph diff check:
+
+GIT_MASTER=1 git diff --stat HEAD -- framework/include/nndeploy/egraph
+
+ framework/include/nndeploy/egraph/README.md | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+Conclusion: this task introduced no parser or incremental-rebuild implementation churn; within `framework/include/nndeploy/egraph`, only `README.md` changed.
