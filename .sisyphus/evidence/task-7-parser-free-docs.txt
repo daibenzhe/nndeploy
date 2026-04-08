@@ -1,4 +1,0 @@
-README grep:
-- S-expression Parser: Broad support for string-based pattern/expression parsing is deferred. Patterns must be constructed via `PatternAst`, `PatternBuilder`, or `RecExpr`.
-- `PatternBuilder<Op>` is a small parser-free helper for building `PatternAst<Op>` values with less boilerplate.
-- These helpers do not parse strings or s-expressions; they only reduce AST construction boilerplate.
