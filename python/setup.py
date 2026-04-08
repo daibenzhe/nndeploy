@@ -498,10 +498,10 @@ cmd_classes["install"] = InstallCommand
 
 
 # Execute copy operation
-# copy_server_directory()
+copy_server_directory()
 setup(
     name="nndeploy",
-    version="3.0.8",  # Fix version number format
+    version="3.0.10",  # Fix version number format
     author="nndeploy team",
     author_email="595961667@qq.com",  # Add email
     description="An Easy-to-Use and High-Performance AI deployment framework",  # Add short description
